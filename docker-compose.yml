@@ -1,0 +1,80 @@
+version: "3"
+
+services:
+  alice-bitcoind:
+    container_name: alice-bitcoind
+    restart: always
+    image: btcpayserver/bitcoin:0.18.0
+    expose:
+    - "8335"
+    - "39389"
+    environment:
+      BITCOIN_NETWORK: regtest
+      BITCOIN_EXTRA_ARGS: |
+        rpcport=8335
+        rpcbind=0.0.0.0:8335
+        port=39389
+        addnode=bob-bitcoind:39388
+    volumes:
+    - "alice_bitcoind_data:/data"
+
+  bob-bitcoind:
+    container_name: bob-bitcoind
+    restart: always
+    image: btcpayserver/bitcoin:0.18.0
+    expose:
+    - "8336"
+    - "39388"
+    environment:
+      BITCOIN_NETWORK: regtest
+      BITCOIN_EXTRA_ARGS: |
+        rpcport=8336
+        rpcbind=0.0.0.0:8336
+        port=39388
+        addnode=alice-bitcoind:39389
+    volumes:
+    - "bob_bitcoind_data:/data"
+
+  cli:
+    container_name: cli
+    restart: always
+    image: btcpayserver/bitcoin:0.18.0
+    environment:
+      BITCOIN_NETWORK: regtest
+    volumes:
+      - "cli_data:/data"
+      - "alice_bitcoind_data:/alice/bitcoind"
+      - "bob_bitcoind_data:/bob/bitcoind"
+    links:
+      - alice-bitcoind
+      - bob-bitcoind
+
+
+  # alice-ln:
+  #   image: elementsproject/lightningd
+  #   container_name: alice-ln
+  #   command:
+  #     - --network=regtest
+  #     - --alias=alice-ln
+  #     - --log-level=debug
+  #     - --datadir=/etc/bitcoin
+  #   environment:
+  #     EXPOSE_TCP: "true"
+  #   expose:
+  #     - "9735"
+  #   ports:
+  #     - "0.0.0.0:9735:9735"
+  #   volumes:
+  #     - "alice_ln_datadir:/root/.lightning"
+  #     - "alice_bitcoind_data:/etc/bitcoin"
+  #   links:
+  #     - alice-bitcoind
+
+
+volumes:
+  alice_bitcoind_data:
+  bob_bitcoind_data:
+  alice_ln_datadir:
+  cli_data:
+
+networks: {}
