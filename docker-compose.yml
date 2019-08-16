@@ -69,10 +69,31 @@ services:
     links:
       - alice-bitcoind
 
+  bob-ln:
+    image: elementsproject/lightningd
+    container_name: bob-ln
+    command:
+      - --bitcoin-rpcconnect=bob-bitcoind:8336
+      - --network=regtest
+      - --alias=bob-ln
+      - --log-level=debug      
+    environment:
+      EXPOSE_TCP: "true"
+    expose:
+      - "9736"
+    ports:
+      - "0.0.0.0:9736:9736"
+    volumes:
+      - "bob_ln_datadir:/root/.lightning"
+      - "bob_bitcoind_data:/root/.bitcoin"
+    links:
+      - alice-bitcoind
+
 volumes:
   alice_bitcoind_data:
   bob_bitcoind_data:
   alice_ln_datadir:
+  bob_ln_datadir:
   cli_data:
 
 networks: {}
