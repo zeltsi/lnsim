@@ -49,27 +49,25 @@ services:
       - alice-bitcoind
       - bob-bitcoind
 
-
-  # alice-ln:
-  #   image: elementsproject/lightningd
-  #   container_name: alice-ln
-  #   command:
-  #     - --network=regtest
-  #     - --alias=alice-ln
-  #     - --log-level=debug
-  #     - --datadir=/etc/bitcoin
-  #   environment:
-  #     EXPOSE_TCP: "true"
-  #   expose:
-  #     - "9735"
-  #   ports:
-  #     - "0.0.0.0:9735:9735"
-  #   volumes:
-  #     - "alice_ln_datadir:/root/.lightning"
-  #     - "alice_bitcoind_data:/etc/bitcoin"
-  #   links:
-  #     - alice-bitcoind
-
+  alice-ln:
+    image: elementsproject/lightningd
+    container_name: alice-ln
+    command:
+      - --bitcoin-rpcconnect=alice-bitcoind:8335
+      - --network=regtest
+      - --alias=alice-ln
+      - --log-level=debug      
+    environment:
+      EXPOSE_TCP: "true"
+    expose:
+      - "9735"
+    ports:
+      - "0.0.0.0:9735:9735"
+    volumes:
+      - "alice_ln_datadir:/root/.lightning"
+      - "alice_bitcoind_data:/root/.bitcoin"
+    links:
+      - alice-bitcoind
 
 volumes:
   alice_bitcoind_data:
