@@ -61,8 +61,6 @@ services:
       EXPOSE_TCP: "true"
     expose:
       - "9735"
-    ports:
-      - "0.0.0.0:9735:9735"
     volumes:
       - "alice_ln_datadir:/root/.lightning"
       - "alice_bitcoind_data:/root/.bitcoin"
@@ -81,8 +79,6 @@ services:
       EXPOSE_TCP: "true"
     expose:
       - "9736"
-    ports:
-      - "0.0.0.0:9736:9736"
     volumes:
       - "bob_ln_datadir:/root/.lightning"
       - "bob_bitcoind_data:/root/.bitcoin"
