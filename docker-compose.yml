@@ -35,20 +35,6 @@ services:
     volumes:
     - "bob_bitcoind_data:/data"
 
-  cli:
-    container_name: cli
-    restart: always
-    image: btcpayserver/bitcoin:0.18.0
-    environment:
-      BITCOIN_NETWORK: regtest
-    volumes:
-      - "cli_data:/data"
-      - "alice_bitcoind_data:/alice/bitcoind"
-      - "bob_bitcoind_data:/bob/bitcoind"
-    links:
-      - alice-bitcoind
-      - bob-bitcoind
-
   alice-ln:
     image: elementsproject/lightningd
     container_name: alice-ln
@@ -90,6 +76,5 @@ volumes:
   bob_bitcoind_data:
   alice_ln_datadir:
   bob_ln_datadir:
-  cli_data:
 
 networks: {}
