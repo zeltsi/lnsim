@@ -1,3 +1,3 @@
 ## Lightning network stack with docker
 
-![Diagram](/map.png)
+<img src="map.png">
